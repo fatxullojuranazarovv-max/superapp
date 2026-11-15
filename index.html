@@ -1,166 +1,122 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Super Mini App</title>
-    <script src="https://telegram.org"></script>
-    <script src="https://adsgram.ai" async></script>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: #0d1414; color: #ffffff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; user-select: none; }
-        .header { padding: 15px 20px; background: #141f1f; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #223333; }
-        .balance-box { background: #1c2e2e; padding: 6px 14px; border-radius: 20px; font-weight: bold; color: #2ee59d; border: 1px solid #2ee59d44; }
-        .content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .tab-page { display: none; width: 100%; max-width: 400px; text-align: center; animation: fadeIn 0.25s; }
-        .tab-page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .coin-btn { width: 170px; height: 170px; border-radius: 50%; background: radial-gradient(circle, #2ee59d, #117a53); border: 6px solid #1b3b30; font-size: 55px; display: flex; align-items: center; justify-content: center; margin: 18px auto; cursor: pointer; box-shadow: 0 0 30px #2ee59d44; transition: transform 0.1s; }
-        .coin-btn:active { transform: scale(0.92); }
-        .ad-btn { background: linear-gradient(90deg, #ff9900, #ff5500); color: white; border: none; padding: 14px 20px; border-radius: 12px; font-weight: bold; font-size: 16px; width: 100%; margin-top: 12px; cursor: pointer; box-shadow: 0 4px 15px #ff550044; }
-        .ad-btn:active { transform: scale(0.97); }
-        .share-btn { background: #1c2e2e; color: #2ee59d; border: 1px solid #2ee59d66; padding: 12px 20px; border-radius: 12px; font-weight: bold; font-size: 15px; width: 100%; margin-top: 10px; cursor: pointer; }
-        .quiz-card { background: #141f1f; padding: 20px; border-radius: 16px; border: 1px solid #223333; position: relative; }
-        .level-pill { display: inline-block; background: #1c2e2e; color: #2ee59d; font-size: 12px; font-weight: bold; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; border: 1px solid #2ee59d44; }
-        .timer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: bold; }
-        .timer-badge { background: #2a1a1a; color: #ff5555; padding: 4px 10px; border-radius: 12px; border: 1px solid #ff555555; }
-        .timer-bar-bg { width: 100%; height: 6px; background: #1c2e2e; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
-        .timer-bar-fill { height: 100%; width: 100%; background: #2ee59d; transition: width 1s linear, background-color 0.3s; }
-        .quiz-q { font-size: 21px; margin-bottom: 18px; font-weight: 700; line-height: 1.4; min-height: 54px; display: flex; align-items: center; justify-content: center; color: #ffffff; }
-        .quiz-opt { background: #1c2e2e; border: 1px solid #2a4444; color: white; padding: 14px; width: 100%; border-radius: 10px; margin-bottom: 10px; font-size: 17px; font-weight: 600; cursor: pointer; text-align: center; transition: 0.15s; }
-        .quiz-opt:active { background: #2ee59d; color: #000; }
-        .status-msg { font-size: 14px; font-weight: bold; min-height: 22px; margin-top: 5px; }
-        .tool-card { background: #141f1f; padding: 20px; border-radius: 16px; border: 1px solid #223333; text-align: left; }
-        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #2a4444; background: #0d1414; color: white; font-size: 16px; margin: 10px 0; }
-        .result-text { color: #2ee59d; font-size: 18px; font-weight: bold; margin-top: 10px; }
-        .nav-bar { display: flex; background: #141f1f; border-top: 1px solid #223333; padding: 10px 0; }
-        .nav-item { flex: 1; text-align: center; color: #7a9999; font-size: 13px; cursor: pointer; padding: 5px; }
-        .nav-item.active { color: #2ee59d; font-weight: bold; }
-        .nav-icon { font-size: 22px; display: block; margin-bottom: 3px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SuperApp</title>
+<script src="https://telegram.org"></script>
+<script src="https://adsgram.ai" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+body{background:#0d1414;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden;user-select:none}
+.hd{padding:15px 20px;background:#141f1f;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #223333}
+.bal{background:#1c2e2e;padding:6px 14px;border-radius:20px;font-weight:bold;color:#2ee59d;border:1px solid #2ee59d44}
+.cnt{flex:1;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pg{display:none;width:100%;max-width:400px;text-align:center}
+.pg.act{display:block}
+.coin{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,#2ee59d,#117a53);border:6px solid #1b3b30;font-size:55px;display:flex;align-items:center;justify-content:center;margin:18px auto;cursor:pointer;box-shadow:0 0 30px #2ee59d44}
+.coin:active{transform:scale(.92)}
+.btn{background:linear-gradient(90deg,#ff9900,#ff5500);color:#fff;border:none;padding:14px;border-radius:12px;font-weight:bold;font-size:16px;width:100%;margin-top:12px;cursor:pointer}
+.btn2{background:#1c2e2e;color:#2ee59d;border:1px solid #2ee59d66;padding:12px;border-radius:12px;font-weight:bold;font-size:15px;width:100%;margin-top:10px;cursor:pointer}
+.card{background:#141f1f;padding:20px;border-radius:16px;border:1px solid #223333}
+.lvl{display:inline-block;background:#1c2e2e;color:#2ee59d;font-size:12px;font-weight:bold;padding:4px 12px;border-radius:20px;margin-bottom:10px}
+.trow{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;font-weight:bold}
+.tbg{width:100%;height:6px;background:#1c2e2e;border-radius:4px;overflow:hidden;margin-bottom:15px}
+.tfl{height:100%;width:100%;background:#2ee59d}
+.qq{font-size:22px;margin-bottom:16px;font-weight:700;min-height:50px;display:flex;align-items:center;justify-content:center}
+.opt{background:#1c2e2e;border:1px solid #2a4444;color:#fff;padding:14px;width:100%;border-radius:10px;margin-bottom:10px;font-size:17px;font-weight:600;cursor:pointer}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #2a4444;background:#0d1414;color:#fff;font-size:16px;margin:10px 0}
+.nav{display:flex;background:#141f1f;border-top:1px solid #223333;padding:10px 0}
+.ni{flex:1;text-align:center;color:#7a9999;font-size:13px;cursor:pointer}
+.ni.act{color:#2ee59d;font-weight:bold}
+</style>
 </head>
 <body>
-    <div class="header">
-        <div style="font-weight: bold; font-size: 18px;">SuperApp 3-in-1</div>
-        <div class="balance-box">💎 <span id="score">0</span></div>
-    </div>
-    <div class="content">
-        <div id="tab-game" class="tab-page active">
-            <h2 style="margin-bottom: 8px;">Tanga yig'ing</h2>
-            <p style="color: #88a8a8; font-size: 14px;">Tangani bosing va ball to'plang</p>
-            <div class="coin-btn" onclick="addScore(1)">💎</div>
-            <button class="ad-btn" onclick="watchAd()">🎬 Reklama ko'rish (+50 💎)</button>
-            <button class="share-btn" onclick="inviteFriend()">👥 Do'stni taklif qilish (+100 💎)</button>
-        </div>
-        <div id="tab-quiz" class="tab-page">
-            <div class="quiz-card">
-                <div class="level-pill" id="level-badge">1-BOSQICH • OSON (+10 💎)</div>
-                <div class="timer-row">
-                    <span style="color: #88a8a8;">MISOL #<span id="q-num">1</span></span>
-                    <span class="timer-badge">⏱ <span id="timer-sec">10</span> soniya</span>
-                </div>
-                <div class="timer-bar-bg">
-                    <div class="timer-bar-fill" id="timer-bar"></div>
-                </div>
-                <div class="quiz-q" id="q-text">Misollarni yuklash...</div>
-                <div id="q-options"></div>
-                <div class="status-msg" id="quiz-status"></div>
-            </div>
-        </div>
-        <div id="tab-tools" class="tab-page">
-            <div class="tool-card">
-                <h3>💱 Valyuta hisoblagich</h3>
-                <p style="color: #88a8a8; font-size: 13px; margin-top: 4px;">1 USD ≈ 12 850 UZS</p>
-                <input type="number" id="usd-input" placeholder="Dollar miqdorini kiriting..." oninput="convertCurrency()">
-                <div class="result-text" id="uzs-result">0 so'm</div>
-            </div>
-        </div>
-    </div>
-    <div class="nav-bar">
-        <div class="nav-item active" onclick="switchTab('game', this)">
-            <span class="nav-icon">🎮</span>O'yin
-        </div>
-        <div class="nav-item" onclick="switchTab('quiz', this)">
-            <span class="nav-icon">🧠</span>Matematika
-        </div>
-        <div class="nav-item" onclick="switchTab('tools', this)">
-            <span class="nav-icon">🛠</span>Foydali
-        </div>
-    </div>
-    <script>
-        if (window.Telegram && window.Telegram.WebApp) {
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
-        }
-
-        let score = parseInt(localStorage.getItem('userScore')) || 0;
-        let qCount = 1;
-        let currentReward = 10;
-        document.getElementById('score').innerText = score;
-
-        function addScore(points) {
-            score += points;
-            document.getElementById('score').innerText = score;
-            localStorage.setItem('userScore', score);
-            if (window.Telegram && Telegram.WebApp.HapticFeedback) {
-                Telegram.WebApp.HapticFeedback.impactOccurred('light');
-            }
-        }
-
-        function watchAd() {
-            if (!window.Adsgram) {
-                let s = document.createElement('script');
-                s.src = 'https://adsgram.ai';
-                s.onload = function() { runAdsgram(); };
-                s.onerror = function() { alert("Internet aloqasini tekshiring yoki VPN o'chirib qayta urinib ko'ring."); };
-                document.head.appendChild(s);
-            } else {
-                runAdsgram();
-            }
-        }
-
-        function runAdsgram() {
-            try {
-                const AdController = window.Adsgram.init({ blockId: "59815" });
-                AdController.show().then((result) => {
-                    addScore(50);
-                    alert("Tabriklaymiz! Reklama ko'rganingiz uchun +50 💎 qo'shildi!");
-                }).catch((result) => {
-                    alert("Hozircha hududingiz uchun reklama topilmadi yoki video oxirigacha ko'rilmadi. Birozdan so'ng qayta bosing.");
-                });
-            } catch (e) {
-                alert("Reklama xatosi: " + e.message);
-            }
-        }
-
-        function inviteFriend() {
-            const shareUrl = "https://t.me soniyada bosqichma-bosqich qiyinlashadigan matematika o'yini! Kirib sinab ko'ring:";
-            if (window.Telegram && Telegram.WebApp.openTelegramLink) {
-                Telegram.WebApp.openTelegramLink(shareUrl);
-                setTimeout(() => { addScore(100); }, 3000);
-            } else {
-                window.open(shareUrl, '_blank');
-                addScore(100);
-            }
-        }
-
-        let currentTab = 'game';
-        let timerInterval = null;
-        let timeLeft = 10;
-        let isAnswered = false;
-
-        function switchTab(tabName, el) {
-            currentTab = tabName;
-            document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('tab-' + tabName).classList.add('active');
-            el.classList.add('active');
-
-            if (tabName === 'quiz') {
-                loadNextQuestion();
-            } else {
-                clearInterval(timerInterval);
-            }
-        }
-
-        function rand(min, max) {
+<div class="hd"><b>SuperApp 3-in-1</b><div class="bal">💎 <span id="sc">0</span></div></div>
+<div class="cnt">
+<div id="p-game" class="pg act">
+<h2>Tanga yig'ing</h2><p style="color:#88a8a8;font-size:14px">Tangani bosing va ball to'plang</p>
+<div class="coin" onclick="add(1)">💎</div>
+<button class="btn" onclick="ad()">🎬 Reklama ko'rish (+50 💎)</button>
+<button class="btn2" onclick="inv()">👥 Do'stni taklif qilish (+100 💎)</button>
+</div>
+<div id="p-quiz" class="pg">
+<div class="card">
+<div class="lvl" id="lv">1-BOSQICH • OSON (+10 💎)</div>
+<div class="trow"><span style="color:#88a8a8">MISOL #<span id="qn">1</span></span><span style="color:#ff5555">⏱ <span id="ts">10</span>s</span></div>
+<div class="tbg"><div class="tfl" id="tb"></div></div>
+<div class="qq" id="qt">...</div>
+<div id="qo"></div>
+<div id="qs" style="font-size:14px;font-weight:bold;min-height:20px;margin-top:5px"></div>
+</div>
+</div>
+<div id="p-tool" class="pg">
+<div class="card" style="text-align:left">
+<h3>💱 Valyuta hisoblagich</h3><p style="color:#88a8a8;font-size:13px;margin-top:4px">1 USD ≈ 12 850 UZS</p>
+<input type="number" id="usd" placeholder="Dollar kiriting..." oninput="conv()">
+<div id="uzs" style="color:#2ee59d;font-size:18px;font-weight:bold">0 so'm</div>
+</div>
+</div>
+</div>
+<div class="nav">
+<div class="ni act" onclick="tab('game',this)"><div style="font-size:22px">🎮</div>O'yin</div>
+<div class="ni" onclick="tab('quiz',this)"><div style="font-size:22px">🧠</div>Matematika</div>
+<div class="ni" onclick="tab('tool',this)"><div style="font-size:22px">🛠</div>Foydali</div>
+</div>
+<script>
+if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}
+let sc=parseInt(localStorage.getItem('sc'))||0,qn=1,rw=10,tm=null,tl=10,ok=0,ct='game';
+document.getElementById('sc').innerText=sc;
+function add(p){sc+=p;document.getElementById('sc').innerText=sc;localStorage.setItem('sc',sc);}
+function ad(){
+if(!window.Adsgram){let s=document.createElement('script');s.src='https://adsgram.ai';s.onload=runAd;document.head.appendChild(s);}else runAd();
+}
+function runAd(){
+try{window.Adsgram.init({blockId:"59815"}).show().then(()=>{add(50);alert("+50 💎 qo'shildi!");}).catch(()=>{alert("Hozircha reklama yo'q, birozdan so'ng bosing.");});}catch(e){alert("Yuklanmoqda...");}
+}
+function inv(){
+let u="https://t.me soniyada matematika o'yini!";
+if(window.Telegram&&Telegram.WebApp.openTelegramLink){Telegram.WebApp.openTelegramLink(u);setTimeout(()=>add(100),3000);}else{window.open(u);add(100);}
+}
+function tab(t,el){
+ct=t;document.querySelectorAll('.pg').forEach(x=>x.classList.remove('act'));
+document.querySelectorAll('.ni').forEach(x=>x.classList.remove('act'));
+document.getElementById('p-'+t).classList.add('act');el.classList.add('act');
+if(t==='quiz')nxt();else clearInterval(tm);
+}
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function gen(s){
+let q="",a=0,lv=document.getElementById('lv');
+if(s<=10){rw=10;lv.innerText="1-BOSQICH • OSON (+10 💎)";let x=rnd(12,48),y=rnd(11,45);q=x+" + "+y+" = ?";a=x+y;}
+else if(s<=25){rw=20;lv.innerText="2-BOSQICH • O'RTACHA (+20 💎)";let x=rnd(12,19),y=rnd(6,12);q=x+" × "+y+" = ?";a=x*y;}
+else if(s<=50){rw=35;lv.innerText="3-BOSQICH • QIYIN (+35 💎)";let x=rnd(12,22),y=rnd(15,60);q=x+"² + "+y+" = ?";a=x*x+y;}
+else if(s<=100){rw=50;lv.innerText="4-BOSQICH • EKSPERT (+50 💎)";let r=rnd(12,26),y=rnd(15,70);q="√"+(r*r)+" + "+y+" = ?";a=r+y;}
+else{rw=75;lv.innerText="5-BOSQICH • PROFESSOR (+75 💎)";let x=rnd(7,22),k=rnd(4,8),b=rnd(12,45);q=k+"x + "+b+" = "+(k*x+b)+" → x=?";a=x;}
+let w1=a+rnd(2,10),w2=Math.max(1,a-rnd(2,9));if(w2===a)w2=a+15;
+let opts=[{t:a,c:1},{t:w1,c:0},{t:w2,c:0}].sort(()=>Math.random()-.5);
+return{q,opts};
+}
+function stT(){
+clearInterval(tm);tl=10;let ts=document.getElementById('ts'),tb=document.getElementById('tb');
+ts.innerText=tl;tb.style.transition='none';tb.style.width='100%';tb.style.background='#2ee59d';
+setTimeout(()=>{tb.style.transition='width 10s linear';tb.style.width='0%';},50);
+tm=setInterval(()=>{tl--;ts.innerText=tl;if(tl<=4)tb.style.background='#ff5555';
+if(tl<=0){clearInterval(tm);if(!ok&&ct==='quiz'){ok=1;document.getElementById('qs').innerText="⏰ Vaqt tugadi!";setTimeout(nxt,900);}}
+},1000);
+}
+function nxt(){
+ok=0;document.getElementById('qs').innerText="";document.getElementById('qn').innerText=qn;
+let g=gen(qn);document.getElementById('qt').innerText=g.q;
+let h="";g.opts.forEach(o=>{h+=`<button class="opt" onclick="chk(this,${o.c})">${o.t}</button>`;});
+document.getElementById('qo').innerHTML=h;stT();
+}
+function chk(b,c){
+if(ok)return;ok=1;clearInterval(tm);let qs=document.getElementById('qs');
+if(c){b.style.background='#2ee59d';b.style.color='#000';qs.style.color='#2ee59d';qs.innerText="✅ To'g'ri! +"+rw+" 💎";add(rw);qn++;}
+else{b.style.background='#ff5555';qs.style.color='#ff5555';qs.innerText="❌ Noto'g'ri!";}
+setTimeout(nxt,800);
+}
+function conv(){document.getElementById('uzs').innerText=(document.getElementById('usd').value*12850).toLocaleString('uz-UZ')+" so'm";}
+</script>
+</body>
+</html>
