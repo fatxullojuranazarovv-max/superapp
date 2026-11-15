@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Super Mini App</title>
+    <script src="https://telegram.org"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: #0d1414; color: #ffffff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; user-select: none; }
+        .header { padding: 15px 20px; background: #141f1f; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #223333; }
+        .balance-box { background: #1c2e2e; padding: 6px 14px; border-radius: 20px; font-weight: bold; color: #2ee59d; border: 1px solid #2ee59d44; }
+        .content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .tab-page { display: none; width: 100%; max-width: 400px; text-align: center; animation: fadeIn 0.3s; }
+        .tab-page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .coin-btn { width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #2ee59d, #117a53); border: 6px solid #1b3b30; font-size: 60px; display: flex; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; box-shadow: 0 0 30px #2ee59d44; transition: transform 0.1s; }
+        .coin-btn:active { transform: scale(0.92); }
+        .ad-btn { background: linear-gradient(90deg, #ff9900, #ff5500); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: bold; font-size: 15px; width: 100%; margin-top: 15px; cursor: pointer; }
+        .quiz-card { background: #141f1f; padding: 20px; border-radius: 16px; border: 1px solid #223333; }
+        .quiz-q { font-size: 18px; margin-bottom: 15px; font-weight: 600; }
+        .quiz-opt { background: #1c2e2e; border: 1px solid #2a4444; color: white; padding: 12px; width: 100%; border-radius: 10px; margin-bottom: 10px; font-size: 15px; cursor: pointer; text-align: left; }
+        .quiz-opt:active { background: #2ee59d; color: #000; }
+        .tool-card { background: #141f1f; padding: 20px; border-radius: 16px; border: 1px solid #223333; text-align: left; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #2a4444; background: #0d1414; color: white; font-size: 16px; margin: 10px 0; }
+        .result-text { color: #2ee59d; font-size: 18px; font-weight: bold; margin-top: 10px; }
+        .nav-bar { display: flex; background: #141f1f; border-top: 1px solid #223333; padding: 10px 0; }
+        .nav-item { flex: 1; text-align: center; color: #7a9999; font-size: 13px; cursor: pointer; padding: 5px; }
+        .nav-item.active { color: #2ee59d; font-weight: bold; }
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div style="font-weight: bold; font-size: 18px;">SuperApp 3-in-1</div>
+        <div class="balance-box">💎 <span id="score">0</span></div>
+    </div>
+    <div class="content">
+        <div id="tab-game" class="tab-page active">
+            <h2 style="margin-bottom: 10px;">Tanga yig'ing</h2>
+            <p style="color: #88a8a8; font-size: 14px;">Tangani bosing va ball to'plang</p>
+            <div class="coin-btn" onclick="addScore(1)">💎</div>
+            <button class="ad-btn" onclick="watchAd()">🎬 Reklama ko'rish (+50 💎)</button>
+        </div>
+        <div id="tab-quiz" class="tab-page">
+            <div class="quiz-card">
+                <div style="color: #2ee59d; font-size: 13px; margin-bottom: 5px;">SAVOL-JAVOB (+20 💎)</div>
+                <div class="quiz-q" id="q-text">Savol yuklanmoqda...</div>
+                <div id="q-options"></div>
+            </div>
+        </div>
+        <div id="tab-tools" class="tab-page">
+            <div class="tool-card">
+                <h3>💱 Valyuta hisoblagich</h3>
+                <p style="color: #88a8a8; font-size: 13px; margin-top: 4px;">1 USD ≈ 12 850 UZS</p>
+                <input type="number" id="usd-input" placeholder="Dollar miqdorini kiriting..." oninput="convertCurrency()">
+                <div class="result-text" id="uzs-result">0 so'm</div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="switchTab('game', this)">
+            <span class="nav-icon">🎮</span>O'yin
+        </div>
+        <div class="nav-item" onclick="switchTab('quiz', this)">
+            <span class="nav-icon">🧠</span>Viktorina
+        </div>
+        <div class="nav-item" onclick="switchTab('tools', this)">
+            <span class="nav-icon">🛠</span>Foydali
+        </div>
+    </div>
+    <script>
+        if (window.Telegram && window.Telegram.WebApp) {
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+        }
+        let score = parseInt(localStorage.getItem('userScore')) || 0;
+        document.getElementById('score').innerText = score;
+        function addScore(points) {
+            score += points;
+            document.getElementById('score').innerText = score;
+            localStorage.setItem('userScore', score);
+            if (window.Telegram && Telegram.WebApp.HapticFeedback) {
+                Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            }
+        }
+        function watchAd() {
+            alert("Bu yerga Adsgram reklama kodi ulanadi. Hozircha sinov uchun +50 ball berildi!");
+            addScore(50);
+        }
+        function switchTab(tabName, el) {
+            document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            el.classList.add('active');
+        }
+        const questions = [
+            { q: "O'zbekistonning poytaxti qaysi shahar?", opts: ["Samarqand", "Toshkent", "Buxoro"], ans: 1 },
+            { q: "1 bayt necha bitga teng?", opts: ["4 bit", "8 bit", "16 bit"], ans: 1 },
+            { q: "Dunyodagi eng baland cho'qqi qaysi?", opts: ["Everest", "Chimyon", "Elbrus"], ans: 0 },
+            { q: "Quyosh sistemasidagi eng katta sayyora?", opts: ["Mars", "Saturn", "Yupiter"], ans: 2 }
+        ];
+        let currentQ = 0;
+        function loadQuestion() {
+            let item = questions[currentQ];
+            document.getElementById('q-text').innerText = item.q;
+            let optsHtml = '';
+            item.opts.forEach((opt, index) => {
+                optsHtml += `<button class="quiz-opt" onclick="checkAnswer(${index})">${opt}</button>`;
+            });
+            document.getElementById('q-options').innerHTML = optsHtml;
+        }
+        function checkAnswer(index) {
+            if (index === questions[currentQ].ans) {
+                alert("To'g'ri! +20 ball qo'shildi.");
+                addScore(20);
+            } else {
+                alert("Noto'g'ri javob!");
+            }
+            currentQ = (currentQ + 1) % questions.length;
+            loadQuestion();
+        }
+        loadQuestion();
+        function convertCurrency() {
+            let usd = document.getElementById('usd-input').value;
+            let uzs = (usd * 12850).toLocaleString('uz-UZ');
+            document.getElementById('uzs-result').innerText = uzs + " so'm";
+        }
+    </script>
+</body>
+</html>
